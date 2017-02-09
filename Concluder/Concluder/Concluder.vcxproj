@@ -131,9 +131,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Axis.h" />
     <ClInclude Include="FuzzyLogic.h" />
     <ClInclude Include="FuzzyVariable.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="Range.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

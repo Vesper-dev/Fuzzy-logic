@@ -35,5 +35,11 @@
     <ClInclude Include="Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Axis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Range.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
