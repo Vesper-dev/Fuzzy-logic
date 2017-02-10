@@ -9,6 +9,7 @@ FuzzyLogic::FuzzyLogic()
 void FuzzyLogic::setOutputVariable(FuzzyVariable& variable) 
 {
     _outputVar = &variable;
+    _axis.setRange(_outputVar->getRange());
     setTermOnAxis();
 }
 
@@ -30,8 +31,8 @@ void FuzzyLogic::setTermOnAxis()
     for (int i = 0; i < _outputVar->getTermsSize(); ++i) {
         for (int j = 0; j < 6; ++j){
             _shapes.push_back(Shape());
-            _shapes[i].points[j] = sf::Vertex({ _axis.getX(_outputVar->getTerm(i).nodes[nodes[j]]), 
-                pointsY[j] });
+            float pointX = _axis.getX(_outputVar->getTerm(i).nodes[nodes[j]]);
+            _shapes[i].points[j] = sf::Vertex({ pointX, pointsY[j] });
         }
         for (auto &x : _shapes[i].points) {
             x.color = sf::Color::Black;
@@ -92,18 +93,35 @@ void FuzzyLogic::setConclusionMinOnAxis()
 {
     for (int i = 0; i < _outputVar->getTermsSize(); ++i) {
         if (_outputVar->getTerm(i).value > 0) {
-            outDiagram.push_back(sf::ConvexShape());
-            outDiagram.back().setPointCount(4);
-            outDiagram.back().setFillColor(sf::Color::Red);
-            outDiagram.back().setPoint(0, { _axis.getX(_outputVar->getTerm(i).nodes[0]), 300 });
-            float y = (_outputVar->getTerm(i).value);
-            float crossPoint = _outputVar->getTerm(i).getCrossPointY(1, 0, y);
-            outDiagram.back().setPoint(1, { _axis.getX(crossPoint), 300-(y*200) });
-            crossPoint = _outputVar->getTerm(i).getCrossPointY(2, 3, y);
-            outDiagram.back().setPoint(2, { _axis.getX(crossPoint), 300- (y * 200) });
-            outDiagram.back().setPoint(3, { _axis.getX(_outputVar->getTerm(i).nodes[3]), 300 });
+            setOutputDiagram(i);
         }
     }
+}
+
+void FuzzyLogic::setOutputDiagram(size_t index)
+{
+    outDiagram.push_back(sf::ConvexShape());
+    outDiagram.back().setPointCount(4);
+    outDiagram.back().setFillColor(sf::Color::Red);
+    setOutputDiagramPoints(index);
+}
+
+void FuzzyLogic::setOutputDiagramPoints(size_t index)
+{
+    float x = _axis.getX(_outputVar->getTerm(index).nodes[0]);
+    float y = _axis.getY(0);
+    outDiagram.back().setPoint(0, { x, y });
+
+    x = _axis.getX(_outputVar->getTerm(index).getCrossPointY(1, 0));
+    y = _axis.getY(_outputVar->getTerm(index).value);
+    outDiagram.back().setPoint(1, { x, y });
+
+    x = _axis.getX(_outputVar->getTerm(index).getCrossPointY(2, 3));
+    outDiagram.back().setPoint(2, { x, y });
+
+    x = _axis.getX(_outputVar->getTerm(index).nodes[3]);
+    y = _axis.getY(0);
+    outDiagram.back().setPoint(3, { x, y });
 }
 
 float FuzzyLogic::getLOMValue()
@@ -114,6 +132,6 @@ float FuzzyLogic::getLOMValue()
         if (checkLOM > LOM_Value)
             LOM_Value = checkLOM;
     }
-    LOM_Value -= _axis.getZeroPosition();
+    LOM_Value -= _axis.getZeroX();
     return LOM_Value/_axis.getPixelSpace();
 }

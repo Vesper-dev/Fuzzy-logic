@@ -12,13 +12,16 @@ public:
         _range = range;
         setHorizontalAxis();
         setGraduation();
-        setHorizontalAxis();
+        setVerticalAxis();
+    }
+    void setRange(Range range) {
+        _range = range;
     }
     float getX(float pointX) {
         return pointX*_pixelSpace + vertical.getPosition().x;
     }
     float getY(float pointY) {
-        return pointY*_pixelSpace + horizontal.getPosition().y;
+        return horizontal.getPosition().y - pointY*_size.y;
     }
     void draw(sf::RenderWindow& window) {
         window.draw(vertical);
@@ -29,7 +32,7 @@ public:
     float getPixelSpace() {
         return _pixelSpace;
     }
-    float getZeroPosition() {
+    float getZeroX() {
         return vertical.getPosition().x;
     }
 private:
@@ -47,11 +50,10 @@ private:
         if (ratio >= 5) {
             _pixelSpace = ratio;
         }
-        int j = 0;
-        for (float i = 0; i <= _size.x; i += _pixelSpace, ++j) {
+        for (auto i = _position.x; i <= _size.x; i += _pixelSpace) {
             _graduations.push_back(sf::RectangleShape({ 1, 10 }));
-            _graduations[j].setPosition(i, 295);
-            _graduations[j].setFillColor(sf::Color(185, 185, 185, 255));
+            _graduations.back().setPosition(i, _position.y - 5);
+            _graduations.back().setFillColor(sf::Color(185, 185, 185, 255));
         }
     }
     void setHorizontalAxis() {
@@ -64,7 +66,7 @@ private:
         vertical = sf::RectangleShape({ 1, _size.y });
         vertical.setFillColor(sf::Color::Black);
         if (_range.getUpper() >= 0)
-            for (int i = _range.getLower(), j = 0; i < _range.getUpper(); ++i, ++j)
+            for (int i = _range.getLower(), j = 0; i < _range.getUpper(); i ++, ++j) 
                 if (i == 0) {
                     vertical.setPosition(_graduations[j].getPosition().x, 100);
                     break;

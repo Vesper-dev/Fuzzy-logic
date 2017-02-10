@@ -36,6 +36,8 @@ class FuzzyLogic
     void setTermOnAxis();
     int getRuleIndex(std::string outputValue);
     void setConclusionMinOnAxis();
+    void setOutputDiagram(size_t index);
+    void setOutputDiagramPoints(size_t index);
 
 public:
     FuzzyLogic();

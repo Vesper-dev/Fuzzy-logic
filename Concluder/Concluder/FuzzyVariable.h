@@ -31,11 +31,11 @@ struct Term {
         return a*xValue + b;
     }
 
-    float getCrossPointY(int nodeNumber1, int nodeNumber2, float yValue) {
+    float getCrossPointY(int nodeNumber1, int nodeNumber2) {
         float a = (nodesY[nodeNumber2] - nodesY[nodeNumber1]) /
             (nodes[nodeNumber2] - nodes[nodeNumber1]);
         float b = nodesY[nodeNumber2] - a*nodes[nodeNumber2];
-        return (yValue-b)/a;
+        return (value-b)/a;
     }
 private:
     float nodesY[4] = { 0, 1, 1, 0 };
